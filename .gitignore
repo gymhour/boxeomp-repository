@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment variables and secrets
+.env
+.env.*
+**/.env
+**/.env.*
+!**/.env.example
+
+# Backend generated files
+boxeomp-backend/dist/
+boxeomp-backend/tsconfig.tsbuildinfo
+boxeomp-backend/.rag-vector-store-cache.json
+boxeomp-backend/uploads-asistente/*
+!boxeomp-backend/uploads-asistente/.gitkeep
+
+# Frontend generated files
+boxeomp-frontend/build/
+boxeomp-frontend/coverage/
+
+# Logs and editor files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+.idea/
+.vscode/

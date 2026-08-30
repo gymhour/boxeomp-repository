@@ -1,0 +1,24 @@
+{
+    "//": "SIN USO — el backend corre en Railway, que ignora este archivo por completo: los crons de acá NO se ejecutan. El scheduler real es el servicio 'cron' de Railway (Cron Schedule 0 10 * * *) -> dist/scripts/dailyCron.js. Se conserva por las dudas.",
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/api"
+        }
+    ],
+    "functions": {
+        "api/index.ts": { "maxDuration": 60 },
+        "api/cron/checkVencidas.ts": { "maxDuration": 60 },
+        "api/cron/daily.ts": { "maxDuration": 60 }
+    },
+    "crons": [
+        {
+            "path": "/api/cron/checkVencidas",
+            "schedule": "0 4 * * *"
+        },
+        {
+            "path": "/api/cron/daily",
+            "schedule": "0 10 * * *"
+        }
+    ]
+}

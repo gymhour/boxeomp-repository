@@ -1,0 +1,208 @@
+@import url("../../../variables.css");
+
+.inicio-bienvenida-ctn {
+  margin-bottom: 20px;
+}
+
+/* Acceso directo a "Agendar turno": es la acción más frecuente del alumno, así que va
+   arriba de todo y con el color primario para que se vea apenas entra. */
+.agendar-turno-cta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 550px;
+  max-width: 550px;
+  margin-bottom: 24px;
+  border-radius: 14px;
+  padding: 18px 20px;
+  background: var(--primary-color);
+  color: #fafafa;
+  text-decoration: none;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.agendar-turno-cta:hover,
+.agendar-turno-cta:focus-visible {
+  background: var(--primary-color-hover);
+  box-shadow: 0 14px 30px var(--background-hover-color);
+  transform: translateY(-2px);
+}
+
+.agendar-turno-cta__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.agendar-turno-cta__copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.agendar-turno-cta__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.agendar-turno-cta__subtitle {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  opacity: 0.9;
+}
+
+.agendar-turno-cta__arrow {
+  flex-shrink: 0;
+}
+
+.turnos-ctn {
+  width: 550px;
+  max-width: 550px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.turnos-ctn-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.turnos-ctn-title h3 {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.inicio-clases-act-title {
+  margin-top: 30px;
+  width: 550px;
+  max-width: 550px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inicio-clases-act-title h3 {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.turnos-ctn-turnos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media screen and (max-width: 550px) {
+  .turnos-ctn {
+    width: auto;
+  }
+
+  .agendar-turno-cta {
+    width: auto;
+  }
+
+  .inicio-clases-act-title,
+  .turnos-ctn-title {
+    width: auto;
+    flex-wrap: wrap;
+  }
+
+  .inicio-bienvenida-ctn {
+    text-align: center;
+  }
+
+  .turnos-ctn-btn-agendar-nuevo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+}
+
+.cuota-reminder {
+  background: rgba(255, 193, 7, 0.12);
+  border: 1px solid rgba(255, 193, 7, 0.35);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.cuota-reminder__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.cuota-reminder__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cuota-reminder__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.cuota-reminder__close:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.cuota-reminder__message {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+.cuota-reminder__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.cuota-reminder__item {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 193, 7, 0.35);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.cuota-reminder__item-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.cuota-reminder__item-row+.cuota-reminder__item-row {
+  margin-top: 6px;
+}
+
+.cuota-reminder__actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}

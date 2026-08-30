@@ -1,0 +1,21 @@
+{
+  "name": "boxeomp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo de BoxeoMP: API Node/Express/Prisma y frontend React.",
+  "workspaces": [
+    "boxeomp-backend",
+    "boxeomp-frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace @boxeomp/backend",
+    "dev:frontend": "npm start --workspace @boxeomp/frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "npm run build --workspace @boxeomp/backend",
+    "build:frontend": "npm run build --workspace @boxeomp/frontend",
+    "start": "npm run start:backend",
+    "start:backend": "npm start --workspace @boxeomp/backend",
+    "migrate:deploy": "npm run migrate:deploy --workspace @boxeomp/backend",
+    "seed": "npm run seed --workspace @boxeomp/backend"
+  }
+}
