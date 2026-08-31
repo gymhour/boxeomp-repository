@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LoginBackgroundImage from "../../../assets/login/login_background.png"
+import CLIENT_SETUP from '../../../setup';
 import CustomInput from '../../../Components/utils/CustomInput/CustomInput';
 import { Link } from 'react-router-dom';
 import './ForgotPassword.css'
@@ -28,7 +28,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className='reset-container' style={{ backgroundImage: `url(${LoginBackgroundImage})` }}>
+    <div className='reset-container' style={{ backgroundImage: `url(${CLIENT_SETUP.branding.loginBackground})` }}>
       {isLoading && <LoaderFullScreen />}
       <div className="reset-subcontainer">
         <div className='reset-subcontainer-title'>

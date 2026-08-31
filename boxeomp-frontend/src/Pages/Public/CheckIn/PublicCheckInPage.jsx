@@ -3,8 +3,7 @@ import { CheckCircle2, LogIn, RotateCcw, ShieldCheck, X, XCircle } from 'lucide-
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import CustomInput from '../../../Components/utils/CustomInput/CustomInput';
 import apiService from '../../../services/apiService';
-import logoDark from '../../../assets/gymhour/logo_gymhour.png';
-import logoLight from '../../../assets/gymhour/logo_gymhour_black.png';
+import CLIENT_SETUP from '../../../setup';
 import './PublicCheckInPage.css';
 
 // En modo kiosko el resultado se cierra solo para dejar la pantalla lista al próximo alumno.
@@ -31,7 +30,9 @@ const PublicCheckInPage = () => {
     return () => observer.disconnect();
   }, []);
 
-  const logoSrc = theme === 'light' ? logoLight : logoDark;
+  const logoSrc = theme === 'light'
+    ? (CLIENT_SETUP.branding.logoLight || CLIENT_SETUP.branding.logo)
+    : CLIENT_SETUP.branding.logo;
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -73,7 +74,7 @@ const PublicCheckInPage = () => {
     <main className="public-checkin-page">
       <section className="public-checkin-shell">
         <div className="public-checkin-card">
-          <img src={logoSrc} alt="GymHour" className="public-checkin-logo" />
+          <img src={logoSrc} alt={CLIENT_SETUP.branding.logoAlt} className="public-checkin-logo" />
           <div className="public-checkin-heading">
             <ShieldCheck className="public-checkin-icon" />
             <div>

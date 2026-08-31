@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 // Css
 import './login.css';
-// Assets
-import LoginBackgroundImage from '../../../assets/login/login_background.png';
-import ClientLogo from '../../../assets/client/wellness_logo.png'
-import OurLogo from '../../../assets/gymhour/logo_gymhour_sin_texto.png'
-import OurLogoBlack from '../../../assets/gymhour/logo_gymhour_sin_texto_negro.png'
+import CLIENT_SETUP from '../../../setup';
 // Funciones
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -51,7 +47,9 @@ const Login = () => {
     return () => observer.disconnect();
   }, []);
 
-  const logoSrc = currentTheme === 'light' ? ClientLogo : ClientLogo;
+  const logoSrc = currentTheme === 'light'
+    ? (CLIENT_SETUP.branding.logoLight || CLIENT_SETUP.branding.logo)
+    : CLIENT_SETUP.branding.logo;
 
   // --- Nuevo: estado del modal de cumpleaños y redirección pendiente ---
   const [showBirthdayModal, setShowBirthdayModal] = useState(false);
@@ -130,11 +128,11 @@ const Login = () => {
   };
 
   return (
-    <div className='login-container' style={{ backgroundImage: `url(${LoginBackgroundImage})` }}>
+    <div className='login-container' style={{ backgroundImage: `url(${CLIENT_SETUP.branding.loginBackground})` }}>
       {/* {isLoading && <LoaderFullScreen />} */}
       <div className="login-subcontainer">
         <div className="gym-logo-container">
-          <img src={logoSrc} alt="Logo del gimnasio" width={120} />
+          <img src={logoSrc} alt={CLIENT_SETUP.branding.logoAlt} width={120} />
         </div>
 
         <div className="form-container">

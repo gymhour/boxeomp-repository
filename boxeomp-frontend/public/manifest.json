@@ -1,6 +1,6 @@
 {
-  "short_name": "Wellness Gym",
-  "name": "Wellness Gym",
+  "short_name": "BoxeoMP",
+  "name": "BoxeoMP",
   "icons": [
     {
       "src": "/logo_192.png",
@@ -28,6 +28,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#01A5A6",
-  "background_color": "#ffffff"
+  "theme_color": "#E15158",
+  "background_color": "#101010"
 }

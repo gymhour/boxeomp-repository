@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import CLIENT_SETUP from './setup';
 
-// API URL LOCAL
-const BASE_URL = 'http://localhost:3000';
-// API URL PROD NUEVA
-// const BASE_URL = 'https://wellnessgym-backend-production.up.railway.app';
+// Se configura en setup.js o mediante REACT_APP_API_URL en el hosting.
+const BASE_URL = CLIENT_SETUP.apiUrl;
 
 // Cliente para login / register / cambiar contraseña (sin interceptores)
 export const authClient = axios.create({

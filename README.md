@@ -38,6 +38,21 @@ npm run build:backend
 npm run build:frontend
 ```
 
+## Configuración del frontend por cliente
+
+La configuración visual y comercial está centralizada en
+`boxeomp-frontend/src/setup.js`. Desde ese archivo se controlan:
+
+- URL de la API (`REACT_APP_API_URL` puede sobrescribirla por ambiente).
+- Nombre, título y descripción del cliente.
+- Logo para tema oscuro y claro.
+- Favicon, apple-touch icon y fondo de autenticación.
+- Colores principales de la interfaz y de los reportes PDF.
+- Titular de cuenta, alias, CBU/CUIL y WhatsApp para comprobantes.
+
+Los componentes no deben importar logos del cliente directamente; deben tomar
+los recursos desde `CLIENT_SETUP`.
+
 ## Base de datos
 
 Para aplicar en producción las migraciones existentes de Prisma:

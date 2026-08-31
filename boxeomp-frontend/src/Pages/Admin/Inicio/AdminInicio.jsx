@@ -6,7 +6,7 @@ import SidebarMenu from '../../../Components/SidebarMenu/SidebarMenu';
 import apiService from '../../../services/apiService';
 import LoaderFullScreen from '../../../Components/utils/LoaderFullScreen/LoaderFullScreen';
 import { generateFinancialReportPdf } from '../../../utils/financialReportPdf';
-import logoBlack from '../../../assets/gymhour/logo_gymhour_black.png';
+import CLIENT_SETUP from '../../../setup';
 import { Users, DollarSign, Clock, TrendingUp, TrendingDown, Wallet, UserPlus, UserMinus, Percent } from 'lucide-react';
 import {
   BarChart,
@@ -198,7 +198,8 @@ const AdminInicio = () => {
         periodoLabel,
         aclaracionKpis: `KPIs del mes corriente (${currentMonthName}) · Deuda vencida: acumulada · Clientes activos: total actual · Gráficos: ${periodoLabel}`,
         charts,
-        logoSrc: logoBlack,
+        logoSrc: CLIENT_SETUP.branding.logoLight || CLIENT_SETUP.branding.logo,
+        primaryColor: CLIENT_SETUP.branding.theme.primaryColor,
       });
     } catch (err) {
       console.error('Error al generar el PDF:', err);

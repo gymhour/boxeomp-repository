@@ -2,7 +2,7 @@ import { jsPDF } from 'jspdf';
 import { Copy, Download, Loader, QrCode } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useMemo, useRef, useState } from 'react';
-import gymhourLogo from '../../assets/gymhour/logo_gymhour.png';
+import CLIENT_SETUP from '../../setup';
 import './CheckInSections.css';
 
 const QRCheckInSection = ({ publicPath = '/ingreso?source=qr' }) => {
@@ -49,7 +49,9 @@ const QRCheckInSection = ({ publicPath = '/ingreso?source=qr' }) => {
     setPdfLoading(true);
 
     try {
-      const logoDataUrl = await rasterizeImageToPng(gymhourLogo);
+      const logoDataUrl = await rasterizeImageToPng(
+        CLIENT_SETUP.branding.logoLight || CLIENT_SETUP.branding.logo
+      );
 
       const doc = new jsPDF({ unit: 'pt', format: 'a4' });
       const pageW = doc.internal.pageSize.getWidth();
@@ -99,9 +101,10 @@ const QRCheckInSection = ({ publicPath = '/ingreso?source=qr' }) => {
       // Footer
       doc.setFontSize(9);
       doc.setTextColor(180, 180, 180);
-      doc.text('GymHour — Control de Acceso', cx, pageH - M, { align: 'center' });
+      doc.text(`${CLIENT_SETUP.branding.name} — Control de Acceso`, cx, pageH - M, { align: 'center' });
 
-      doc.save('GymHour_codigoQR_Ingreso.pdf');
+      const clientSlug = CLIENT_SETUP.branding.name.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
+      doc.save(`${clientSlug}_codigoQR_Ingreso.pdf`);
     } catch (error) {
       console.error('Error al generar el PDF:', error);
     } finally {

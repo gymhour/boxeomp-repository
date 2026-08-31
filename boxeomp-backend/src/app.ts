@@ -63,7 +63,8 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-const PORT = process.env.PORT || 3000;;
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = '0.0.0.0';
 
 // Reconstruir __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -87,6 +88,11 @@ app.use(
     swaggerUi.setup(swaggerDocument, swaggerOptions)
 );
 
+// Endpoint liviano para Railway y otros healthchecks.
+app.get('/health', (_req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
 // Rutas
 app.use('/usuarios', userRouter);
 app.use('/usuarios/asistencias', asistenciaRoutes);
@@ -109,8 +115,8 @@ app.use('*', (req, res) => {
     res.status(404).send('Ruta no encontrada');
 });
 
-app.listen(PORT, () => {
-    console.log(`API corriendo en http://localhost:${PORT}/`);
+app.listen(PORT, HOST, () => {
+    console.log(`API corriendo en http://${HOST}:${PORT}/`);
 });
 
 export default app;

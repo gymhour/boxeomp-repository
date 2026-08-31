@@ -2,9 +2,14 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 
-const PRIMARY = [218, 70, 50];      // --primary-color
 const TEXT_DARK = [16, 16, 16];
 const TEXT_GREY = [110, 110, 110];
+
+const hexToRgb = (hex, fallback = [218, 70, 50]) => {
+  const normalized = String(hex || '').replace('#', '').trim();
+  if (!/^[0-9a-f]{6}$/i.test(normalized)) return fallback;
+  return [0, 2, 4].map(index => parseInt(normalized.slice(index, index + 2), 16));
+};
 
 const fmtMoney = (v) => `$${Number(v || 0).toLocaleString('es-AR')}`;
 
@@ -27,8 +32,9 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
  * @param {string}   params.aclaracionKpis Línea aclaratoria del alcance de cada KPI.
  * @param {Array<{title:string,node:HTMLElement}>} params.charts Gráficos a capturar (sólo los que tienen datos).
  * @param {string}   params.logoSrc      URL del logo (negro) para el encabezado.
+ * @param {string}   params.primaryColor Color principal hexadecimal del cliente.
  */
-export async function generateFinancialReportPdf({ kpi, periodoLabel, aclaracionKpis, charts = [], logoSrc }) {
+export async function generateFinancialReportPdf({ kpi, periodoLabel, aclaracionKpis, charts = [], logoSrc, primaryColor }) {
   // Forzar tema claro durante la captura → gráficos legibles/imprimibles
   const prevTheme = document.body.getAttribute('data-theme');
   document.body.setAttribute('data-theme', 'light');
@@ -37,6 +43,7 @@ export async function generateFinancialReportPdf({ kpi, periodoLabel, aclaracion
     await wait(60); // dejar repintar con el tema claro
 
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const primary = hexToRgb(primaryColor);
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
 
@@ -61,7 +68,7 @@ export async function generateFinancialReportPdf({ kpi, periodoLabel, aclaracion
     const tableOpts = {
       theme: 'grid',
       styles: { font: 'helvetica', fontSize: 10, cellPadding: 6, textColor: TEXT_DARK },
-      headStyles: { fillColor: PRIMARY, textColor: 255, fontStyle: 'bold' },
+      headStyles: { fillColor: primary, textColor: 255, fontStyle: 'bold' },
       columnStyles: { 1: { halign: 'right' } },
       margin: { top: contentTop, bottom: pageH - contentBottom, left: margin, right: margin },
     };

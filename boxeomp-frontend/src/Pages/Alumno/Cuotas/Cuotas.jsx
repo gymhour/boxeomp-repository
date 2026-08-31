@@ -6,14 +6,16 @@ import './Cuotas.css';
 import { Copy } from 'lucide-react';
 import { toast } from 'react-toastify';
 import apiService from '../../../services/apiService';
+import CLIENT_SETUP from '../../../setup';
 
 const Cuotas = () => {
   const [cuotas, setCuotas] = useState([]);   // siempre array
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const alias = 'zeus.training.club';
-  const cbu = '0000003100051208535818';
+  const { accountHolder, alias, cbu, cuil, whatsapp } = CLIENT_SETUP.payment;
+  const whatsappHref = `https://wa.me/${whatsapp.phoneNumber}?text=${encodeURIComponent(whatsapp.message)}`;
+  const isConfigured = value => value && !String(value).startsWith('COMPLETAR_');
 
   const handleCopy = async (text) => {
     try {
@@ -81,33 +83,39 @@ const Cuotas = () => {
           <h2>Datos de cuenta</h2>
           <div className="cuotas-datos-pagos-info">
             <span style={{ fontWeight: '600' }} className="alias-and-bank">
-              WELLNESS GYM
+              {accountHolder}
               {/* <GaliciaIcon width="120" /> */}
             </span>
             {/* <span>
               GIMNASIO GYMHOUR
             </span> */}
-            {/* <span>
-              <b>ALIAS:</b> {alias}{' '}
-              <button className="copy-button" onClick={() => handleCopy(alias)}>
-                <Copy size={16} />
-              </button>
-            </span> */}
-            {/* <span>
-              <b>CBU:</b> {cbu}{' '}
-              <button className="copy-button" onClick={() => handleCopy(cbu)}>
-                <Copy width={16} height={16} />
-              </button>
-            </span> */}
-            {/* <span><b>CUIL:</b> 24-35125076-4</span> */}
+            {isConfigured(alias) && (
+              <span>
+                <b>ALIAS:</b> {alias}{' '}
+                <button className="copy-button" onClick={() => handleCopy(alias)}>
+                  <Copy size={16} />
+                </button>
+              </span>
+            )}
+            {isConfigured(cbu) && (
+              <span>
+                <b>CBU:</b> {cbu}{' '}
+                <button className="copy-button" onClick={() => handleCopy(cbu)}>
+                  <Copy width={16} height={16} />
+                </button>
+              </span>
+            )}
+            {isConfigured(cuil) && <span><b>CUIL:</b> {cuil}</span>}
           </div>
-          <a
-            href="https://wa.me/5492216783402?text=Hola%20Wellness%20Gym%21%20Les%20comparto%20el%20comprobante%20de%20pago%20de%20este%20mes%3A"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button class="cuotas-wsp-btn">Enviar comprobante por WhatsApp</button>
-          </a>
+          {isConfigured(whatsapp.phoneNumber) && (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="cuotas-wsp-btn">Enviar comprobante por WhatsApp</button>
+            </a>
+          )}
 
         </div>
 

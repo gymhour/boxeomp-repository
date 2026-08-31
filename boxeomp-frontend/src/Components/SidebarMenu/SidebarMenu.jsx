@@ -3,9 +3,7 @@ import React, { useState } from "react";
 // Css
 import "./sidebarmenu.css";
 // Assets
-import ClientLogo from "../../assets/client/wellness_logo.png";
-import OurLogo from "../../assets/gymhour/logo_gymhour.png";
-import OurLogoBlack from "../../assets/gymhour/logo_gymhour_black.png";
+import CLIENT_SETUP from "../../setup";
 // Iconos sidebar
 import {
   Home,
@@ -76,7 +74,9 @@ const SidebarMenu = ({ isAdmin, isEntrenador }) => {
     return () => observer.disconnect();
   }, []);
 
-  const logoSrc = currentTheme === 'light' ? ClientLogo : ClientLogo;
+  const logoSrc = currentTheme === 'light'
+    ? (CLIENT_SETUP.branding.logoLight || CLIENT_SETUP.branding.logo)
+    : CLIENT_SETUP.branding.logo;
 
   const handleLogoutClick = () => setIsPopupOpen(true);
   const handleLogoutConfirm = () => {
@@ -122,7 +122,7 @@ const SidebarMenu = ({ isAdmin, isEntrenador }) => {
         </button>
         <img
           src={logoSrc}
-          alt="Wembley Logo"
+          alt={CLIENT_SETUP.branding.logoAlt}
           className="mobile-logo"
         />
       </header>
@@ -157,7 +157,7 @@ const SidebarMenu = ({ isAdmin, isEntrenador }) => {
         <div className="sidebar-logo">
           <img
             src={logoSrc}
-            alt="Wembley Logo"
+            alt={CLIENT_SETUP.branding.logoAlt}
             className="logo"
           />
           <div className="menu-divider" />
@@ -598,7 +598,7 @@ const SidebarMenu = ({ isAdmin, isEntrenador }) => {
           <div className="sidebar-footer">
             <img
               src={logoSrc}
-              alt="GymHour Logo"
+              alt={CLIENT_SETUP.branding.logoAlt}
               className="logo"
             />
           </div>

@@ -1,8 +1,8 @@
 /* variables.css */
 :root {
-    --primary-color: #01A5A6;
-    --primary-color-hover: #21b0b0;
-    --background-hover-color: #01a6a630;
+    --primary-color: #E15158;
+    --primary-color-hover: #C43F47;
+    --background-hover-color: #E1515826;
     --medium-grey: #8d8d8d;
     --light-grey: #ffffff36;
     --admin-kpi-card-gradient: linear-gradient(180deg, rgba(16, 16, 16, 0.035) 0%, rgba(16, 16, 16, 0.015) 46%, rgba(255, 255, 255, 0) 100%);

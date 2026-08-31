@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import LoginBackgroundImage from "../../../assets/login/login_background.png";
+import CLIENT_SETUP from '../../../setup';
 import CustomInput from '../../../Components/utils/CustomInput/CustomInput';
 import apiService from '../../../services/apiService';
 import { toast } from 'react-toastify';
@@ -80,7 +80,7 @@ const ResetPassword = () => {
   return (
     <div
       className='reset-container'
-      style={{ backgroundImage: `url(${LoginBackgroundImage})` }}
+      style={{ backgroundImage: `url(${CLIENT_SETUP.branding.loginBackground})` }}
     >
       {isLoading && <LoaderFullScreen/>}
       <div className="reset-subcontainer">
