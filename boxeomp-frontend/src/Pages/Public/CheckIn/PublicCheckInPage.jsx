@@ -13,6 +13,8 @@ const PublicCheckInPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isKiosk = searchParams.get('mode') === 'kiosk';
+  // En la PC de la entrada: si no está autorizada, los ingresos se registran pero la puerta no abre.
+  const stationAuthorized = apiService.isThisStationAuthorized();
   const [dni, setDni] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -82,6 +84,13 @@ const PublicCheckInPage = () => {
               <p>Ingresá tu DNI para registrar la asistencia.</p>
             </div>
           </div>
+
+          {isKiosk && !stationAuthorized && (
+            <p className="public-checkin-result-help" role="note">
+              Esta PC no está autorizada para abrir la puerta. Pedile a un administrador que la autorice
+              desde Ingreso.
+            </p>
+          )}
 
           {!result ? (
             <form className="public-checkin-form" onSubmit={handleSubmit}>

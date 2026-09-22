@@ -8,14 +8,14 @@
 
 // Logo blanco para fondos oscuros, variante carbón para fondos claros y
 // versión cuadrada optimizada para favicon/PWA.
-import logoDark from './assets/client/boxeomp_white_logo.png';
 import logoLight from './assets/client/boxeomp_dark_logo.png';
 import favicon from './assets/client/boxeomp_favicon.png';
+import logoDark from './assets/client/boxeomp_white_logo.png';
 import loginBackground from './assets/login/login_background.png';
 
 const CLIENT_SETUP = {
   // REACT_APP_API_URL tiene prioridad en builds de cada ambiente.
-  apiUrl: process.env.REACT_APP_API_URL || 'https://boxeomp-backend-production.up.railway.app',
+  apiUrl: process.env.REACT_APP_API_URL || 'https://boxeomp-repository-production.up.railway.app/',
 
   branding: {
     name: 'BoxeoMP',

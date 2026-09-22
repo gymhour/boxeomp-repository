@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Copy, Monitor, X } from 'lucide-react';
+import { Copy, Monitor, ShieldCheck, X, XCircle } from 'lucide-react';
 import SidebarMenu from '../../../Components/SidebarMenu/SidebarMenu';
 import DNICheckInSection from '../../../Components/Attendances/DNICheckInSection';
 import QRCheckInSection from '../../../Components/Attendances/QRCheckInSection';
@@ -22,6 +22,10 @@ const AdminCheckInPage = () => {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [kioskCopied, setKioskCopied] = useState(false);
+  const [stationAuthorized, setStationAuthorized] = useState(() => apiService.isThisStationAuthorized());
+  const [stationLoading, setStationLoading] = useState(false);
+  const [stationError, setStationError] = useState('');
+  const [deviceOnline, setDeviceOnline] = useState(null);
 
   // URL genérica para la PC de la entrada (modo kiosko: auto-reset, sin salida a login)
   const kioskUrl = useMemo(() => {
@@ -37,6 +41,43 @@ const AdminCheckInPage = () => {
     } catch {
       setKioskCopied(false);
     }
+  };
+
+  // Estado del módulo de puerta (se refresca cada 30 s mientras la pantalla está abierta).
+  useEffect(() => {
+    let cancelled = false;
+    const loadDeviceStatus = async () => {
+      try {
+        const { conectado } = await apiService.getDeviceStatus();
+        if (!cancelled) setDeviceOnline(Boolean(conectado));
+      } catch {
+        if (!cancelled) setDeviceOnline(null);
+      }
+    };
+    loadDeviceStatus();
+    const intervalId = setInterval(loadDeviceStatus, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const handleAuthorizeStation = async () => {
+    setStationLoading(true);
+    setStationError('');
+    try {
+      await apiService.authorizeThisStation();
+      setStationAuthorized(true);
+    } catch (error) {
+      setStationError(error.message);
+    } finally {
+      setStationLoading(false);
+    }
+  };
+
+  const handleRevokeStation = () => {
+    apiService.revokeThisStation();
+    setStationAuthorized(false);
   };
 
   useEffect(() => {
@@ -100,7 +141,7 @@ const AdminCheckInPage = () => {
                 <DNICheckInSection
                   loading={loading}
                   enableNameSearch
-                  onCheckIn={dni => runCheckIn(() => apiService.registerAttendance({ dni, method: 'DNI' }))}
+                  onCheckIn={dni => runCheckIn(() => apiService.registerAttendance({ dni, method: 'DNI', asStaff: true }))}
                 />
 
                 {/* URL genérica para la PC de ingreso (modo kiosko) */}
@@ -125,6 +166,56 @@ const AdminCheckInPage = () => {
                       <Copy size={18} />
                       {kioskCopied ? 'Link copiado' : 'Copiar link'}
                     </button>
+                  </div>
+                </section>
+
+                {/* Apertura de puerta: solo PCs autorizadas o staff logueado disparan el relé */}
+                <section className="checkin-section" style={{ marginTop: '18px' }}>
+                  <div className="checkin-section-header">
+                    <h3>Apertura de puerta</h3>
+                    <p>
+                      Módulo de puerta:{' '}
+                      <strong>
+                        {deviceOnline === null ? 'sin datos' : deviceOnline ? 'en línea' : 'desconectado'}
+                      </strong>
+                    </p>
+                    <p>
+                      Autorizá una sola vez la PC de la entrada o de recepción (logueado como admin). Los
+                      ingresos desde PCs autorizadas y desde este panel abren la puerta; los que se hacen con
+                      el celular por QR registran la asistencia pero no la abren.
+                    </p>
+                  </div>
+                  <div className="qr-public-link">
+                    {stationAuthorized
+                      ? <ShieldCheck className="qr-link-icon" />
+                      : <XCircle className="qr-link-icon" />}
+                    <span>
+                      {stationAuthorized
+                        ? 'Esta PC está autorizada para abrir la puerta'
+                        : 'Esta PC no está autorizada para abrir la puerta'}
+                    </span>
+                  </div>
+                  {stationError && <p role="alert">{stationError}</p>}
+                  <div className="qr-checkin-controls">
+                    {stationAuthorized ? (
+                      <button
+                        type="button"
+                        className="attendance-primary-action"
+                        onClick={handleRevokeStation}
+                      >
+                        Quitar autorización
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="attendance-primary-action"
+                        onClick={handleAuthorizeStation}
+                        disabled={stationLoading}
+                      >
+                        <ShieldCheck size={18} />
+                        {stationLoading ? 'Autorizando...' : 'Autorizar esta PC'}
+                      </button>
+                    )}
                   </div>
                 </section>
               </>

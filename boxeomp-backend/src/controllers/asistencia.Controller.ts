@@ -9,6 +9,7 @@ import {
   getTotalSessionLimit,
   requiresTurno
 } from '../services/accessRules.service.js';
+import { openDoor, resolveDoorTrigger } from '../services/device.service.js';
 
 /**
  * Obtiene la fecha y hora actual en zona horaria de Argentina (UTC-3).
@@ -316,6 +317,17 @@ export const registrarAsistencia = async (req: Request, res: Response): Promise<
         where: { id_turno: turnoValido.id_turno, estado: 'ACTIVO' },
         data: { estado: 'ASISTIDO', asistidoEn: nowArg }
       });
+    }
+
+    // Puerta: después de persistir la asistencia y antes de responder. Solo abre si el ingreso viene de una
+    // estación de confianza o de staff logueado. Un fallo del dispositivo nunca rompe la respuesta HTTP.
+    try {
+      const origenApertura = resolveDoorTrigger(req);
+      if (origenApertura) {
+        openDoor(asistencia.ID_Asistencia, origenApertura);
+      }
+    } catch (error) {
+      console.error('[device] No se pudo disparar la apertura de puerta:', error);
     }
 
     res.status(200).json({

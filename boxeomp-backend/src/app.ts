@@ -8,6 +8,7 @@ import type { RequestHandler } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet, { contentSecurityPolicy } from "helmet";
 import type { HelmetOptions } from "helmet";
+import { createServer } from 'http';
 import morgan from 'morgan';
 import { dirname, join } from 'path';
 import swaggerUi from 'swagger-ui-express';
@@ -20,6 +21,7 @@ import authRoutes from './routes/auth.Routes.js';
 import claseRoutes from './routes/clase.Routes.js';
 import cronRoutes from './routes/cron.Routes.js';
 import cuotaRoutes from './routes/cuota.Routes.js';
+import deviceRoutes from './routes/device.Routes.js';
 import ejercicioRoutes from "./routes/ejercicio.Routes.js";
 import ejercicioMedicionRoutes from './routes/ejercicioMedicion.Routes.js';
 import gastoRoutes from './routes/gasto.Routes.js';
@@ -29,6 +31,7 @@ import planRoutes from './routes/plan.Routes.js';
 import rutinaRoutes from './routes/rutina.Routes.js';
 import turnoRoutes from './routes/turno.Routes.js';
 import userRouter from './routes/user.Routes.js';
+import { initDeviceGateway } from './services/device.service.js';
 
 dotenv.config();
 // :=)
@@ -110,12 +113,19 @@ app.use('/asistente', asistenteRoutes);
 app.use('/ejercicios', ejercicioRoutes);
 app.use('/gastos', gastoRoutes);
 app.use('/cron', cronRoutes);
+app.use('/device', deviceRoutes);
 
 app.use('*', (req, res) => {
     res.status(404).send('Ruta no encontrada');
 });
 
-app.listen(PORT, HOST, () => {
+// El servidor HTTP se crea explícitamente para colgarle el WebSocket del módulo de puerta:
+// el upgrade de /device se maneja sobre este mismo server (no un servicio aparte).
+const httpServer = createServer(app);
+
+initDeviceGateway(httpServer);
+
+httpServer.listen(PORT, HOST, () => {
     console.log(`API corriendo en http://${HOST}:${PORT}/`);
 });
 

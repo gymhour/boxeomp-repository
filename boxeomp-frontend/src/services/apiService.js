@@ -693,13 +693,55 @@ const deleteGasto = async (id) => {
     }
 }
 
-// Asistencias
-const registerAttendance = async ({ dni, method = 'DNI' }) => {
+// Estación de confianza: PC kiosko/recepción autorizada para disparar la apertura de la puerta.
+// Clave propia en localStorage: el logout solo borra 'token', así que sobrevive al cierre de sesión.
+const STATION_TOKEN_KEY = 'stationToken';
+
+const getLocalStationToken = () => localStorage.getItem(STATION_TOKEN_KEY);
+
+const isThisStationAuthorized = () => Boolean(getLocalStationToken());
+
+const authorizeThisStation = async () => {
     try {
-        const response = await authClient.post('/usuarios/asistencias/registrar', {
-            dni,
-            metodo: method,
-        });
+        const response = await apiClient.post('/device/station-token');
+        localStorage.setItem(STATION_TOKEN_KEY, response.data.stationToken);
+    } catch (error) {
+        const apiData = error?.response?.data;
+        throw new Error(apiData?.message || apiData?.error || 'No se pudo autorizar esta PC.');
+    }
+}
+
+const revokeThisStation = () => {
+    localStorage.removeItem(STATION_TOKEN_KEY);
+}
+
+const getDeviceStatus = async () => {
+    try {
+        const response = await apiClient.get('/device/status');
+        return response.data; // { conectado: boolean }
+    } catch (error) {
+        const apiData = error?.response?.data;
+        throw new Error(apiData?.message || apiData?.error || 'No se pudo consultar el módulo de puerta.');
+    }
+}
+
+// Asistencias
+const registerAttendance = async ({ dni, method = 'DNI', asStaff = false }) => {
+    // Credenciales opcionales: el backend las usa SOLO para decidir si abre la puerta.
+    // - Estación de confianza (PC kiosko/recepción): X-Station-Token.
+    // - Staff desde el panel (asStaff): JWT del admin/entrenador logueado.
+    const headers = {};
+    const stationToken = getLocalStationToken();
+    if (stationToken) headers['X-Station-Token'] = stationToken;
+    const userToken = localStorage.getItem('token');
+    if (asStaff && userToken) headers.Authorization = `Bearer ${userToken}`;
+
+    try {
+        const response = await authClient.post(
+            '/usuarios/asistencias/registrar',
+            { dni, metodo: method },
+            { headers }
+        );
         return mapCheckInResponse(response.data);
     } catch (error) {
         const apiData = getApiErrorData(error);
@@ -921,6 +963,10 @@ export default {
     deleteGasto,
     // Asistencias
     registerAttendance,
+    isThisStationAuthorized,
+    authorizeThisStation,
+    revokeThisStation,
+    getDeviceStatus,
     getAttendances,
     getMyAttendances,
     // Ejercicios

@@ -41,6 +41,24 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
   }
 }
 
+/**
+ * Verificación OPCIONAL del JWT: devuelve el usuario si viene un token válido, o null.
+ * No responde ni corta la request: sirve en endpoints públicos que dan un permiso extra a staff logueado
+ * (ej. el check-in solo abre la puerta si lo hace un admin/entrenador).
+ */
+export const getOptionalAuthUser = (req: Request): NonNullable<Request['user']> | null => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
+  if (!token) return null;
+
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { id: number; email: string; tipo: string | null };
+    return { ID_Usuario: payload.id, email: payload.email, tipo: payload.tipo };
+  } catch {
+    return null;
+  }
+};
+
 // Middleware genérico para requerir uno o varios roles
 export const requireRoles = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
@@ -86,6 +104,7 @@ export function isSelfOrStaff(req: Request, res: Response, next: NextFunction): 
 export const authServices = {
   generateToken,
   authenticateToken,
+  getOptionalAuthUser,
   isAdmin,
   requireRoles,
   isAdminOrEntrenador,
